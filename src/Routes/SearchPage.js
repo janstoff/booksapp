@@ -1,8 +1,8 @@
-import React from 'react'
-import * as BooksAPI from './BooksAPI'
+import React, { Component } from 'react'
+import * as BooksAPI from '../BooksAPI'
 
 
-class SearchPage extends React.Component {
+class SearchPage extends Component {
 
   render() {
     return (

@@ -12,7 +12,6 @@ class SearchPage extends Component {
 
   state = {
     query: ' ',
-    filter: 'all'
   }
 
     updateQuery = (query) => {

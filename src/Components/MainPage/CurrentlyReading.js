@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import * as BooksAPI from '../../BooksAPI'
 
 
 class CurrentlyReading extends Component {
@@ -7,6 +8,7 @@ class CurrentlyReading extends Component {
   static propTypes = {
   books: PropTypes.array.isRequired,
 }
+
 
   render () {
 
@@ -25,7 +27,7 @@ class CurrentlyReading extends Component {
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
                     <div className="book-shelf-changer">
-                      <select>
+                      <select value={book.shelf}>
                         <option value="none" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
                         <option value="wantToRead">Want to Read</option>

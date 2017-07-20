@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { BrowserRouter } from 'react-router-dom'
 import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
@@ -28,16 +27,20 @@ class BooksApp extends Component {
   render() {
     return (
       <div className="app">
-
+            {console.log(this.state.books)}
         <Route exact path="/" render={() => (
           <div>
             <Header/>
             <div className="list-books-content">
-              <div>
-                <CurrentlyReading/>
-                <WantToRead/>
-                <Read/>
-              </div>
+                <CurrentlyReading
+                  books = {this.state.books}
+                />
+                <WantToRead
+                  books = {this.state.books}
+                />
+                <Read
+                  books = {this.state.books}
+                />
             </div>
             <div className="open-search">
               <Link to="/search"></Link>
@@ -45,9 +48,10 @@ class BooksApp extends Component {
           </div>
         )}
        />
-
-        <Route exact path="/search" component={SearchPage}/>
-
+        <Route exact path="/search" render={() => (
+          <SearchPage books={this.state.books}/>
+        )}
+        />
       </div>
     )
   }

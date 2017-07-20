@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
+import * as BooksAPI from '../BooksAPI'
 
 
 class SearchPage extends Component {
@@ -11,31 +12,22 @@ class SearchPage extends Component {
 }
 
   state = {
-    query: ' ',
+    searchResults: [],
   }
 
-    updateQuery = (query) => {
-      this.setState({ query: query.trim() })
-    }
-
-    clearQuery = (query) => {
-      this.setState({ query: '' })
+    updateSearchResults = (query) => {
+      BooksAPI
+      .search(query, 10)
+      .then((searchResults) => {
+        this.setState({searchResults})
+      })
     }
 
 
   render() {
 
     const { books } = this.props
-    const { query } = this.state
-
-
-    let showingBooks
-    if (query) {
-      const optimizedquery = new RegExp(escapeRegExp(query), 'i')
-      showingBooks = books.filter((book) => optimizedquery.test(`${book.title} ${book.authors}`))
-    } else {
-      showingBooks = books
-    }
+    const { searchResults } = this.state
 
 
     return (
@@ -46,18 +38,19 @@ class SearchPage extends Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              value={query}
-              onChange={(event) => this.updateQuery(event.target.value)}
+              onChange={(event) => this.updateSearchResults(event.target.value.trim())}
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {showingBooks.map((book) => (
+            {searchResults.map((book) => (
               <li key={book.id}>
                 <div className="book">
                   <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
+                    {book.imageLinks && (
+                      <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
+                    )}
                     <div className="book-shelf-changer">
                       <select>
                         <option value="none" disabled>Move to...</option>
@@ -69,7 +62,9 @@ class SearchPage extends Component {
                     </div>
                   </div>
                   <div className="book-title">{book.title}</div>
-                  <div className="book-authors">{book.authors.join(', ')}</div>
+                  {book.authors && (
+                    <div className="book-authors">{book.authors.join(', ')}</div>
+                  )}
                   {book.averageRating && (
                     <div className="book-rating">Rating:   {book.averageRating}</div>
                   )}

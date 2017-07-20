@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
-import * as BooksAPI from '../../BooksAPI'
 
 
 class Read extends Component {

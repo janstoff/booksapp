@@ -3,29 +3,30 @@ import PropTypes from 'prop-types'
 import * as BooksAPI from '../../BooksAPI'
 
 
-class CurrentlyReading extends Component {
+class BookShelf extends Component {
 
   static propTypes = {
-  books: PropTypes.array.isRequired,
+  booksOnShelf: PropTypes.array.isRequired,
 }
 
 
   render () {
 
-    const { books } = this.props
+    const { booksOnShelf } = this.props
 
-    let booksCurrentlyReading = books.filter((book) => book.shelf === "currentlyReading")
 
     return (
       <div className="bookshelf">
-        <h2 className="bookshelf-title">Currently Reading</h2>
+        <h2 className="bookshelf-title">Want to Read</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            {booksCurrentlyReading.map((book) => (
-              <li key={book.id}>
-                <div className="book">
+            {booksOnShelf.map((book) => (
+              <li>
+                <div key={book.id} className="book">
                   <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
+                    {book.imageLinks.smallThumbnail && (
+                      <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
+                    )}
                     <div className="book-shelf-changer">
                       <select value={book.shelf}>
                         <option value="none" disabled>Move to...</option>
@@ -37,7 +38,12 @@ class CurrentlyReading extends Component {
                     </div>
                   </div>
                   <div className="book-title">{book.title}</div>
-                  <div className="book-authors">{book.authors.join(', ')}</div>
+                  {book.authors && (
+                    <div className="book-authors">{book.authors.join(', ')}</div>
+                  )}
+                  {book.averageRating && (
+                    <div className="book-rating">Rating:   {book.averageRating}</div>
+                  )}
                 </div>
               </li>
             ))}
@@ -48,4 +54,4 @@ class CurrentlyReading extends Component {
   }
 }
 
-export default CurrentlyReading;
+export default BookShelf;

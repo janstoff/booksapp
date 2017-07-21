@@ -1,45 +1,54 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+//Backend
 import * as BooksAPI from './BooksAPI'
+//Style
 import './App.css'
 //Routes
 import SearchPage from './Routes/SearchPage.js'
 //Components
-import CurrentlyReading from './Components/MainPage/CurrentlyReading.js'
-import WantToRead from './Components/MainPage/WantToRead.js'
-import Read from './Components/MainPage/Read.js'
-
 import Header from './Components/MainPage/Header.js'
+import BookShelf from './Components/MainPage/BookShelf.js'
+
 
 class BooksApp extends Component {
 
   state = {
-    books: []
+    booksOnShelf: [],
+    changeSelection: []
   }
 
   componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState({books /*books: books*/})
+    BooksAPI.getAll().then((booksOnShelf) => {
+      this.setState({booksOnShelf : booksOnShelf})
     })
   }
+
+  changeShelf = (book, shelf) => {
+    BooksAPI.update();
+  }
+
 
   render() {
     return (
       <div className="app">
-            {console.log(this.state.books)}
+            {console.log(this.state.booksOnShelf)}
         <Route exact path="/" render={() => (
           <div>
             <Header/>
             <div className="list-books-content">
-                <CurrentlyReading
-                  books = {this.state.books}
+                <BookShelf
+                  title = "Currently Reading"
+                  booksOnShelf = {this.state.booksOnShelf.filter((book) => book.shelf === "currentlyReading")}
                 />
-                <WantToRead
-                  books = {this.state.books}
+                <BookShelf
+                  title = "Want to Read"
+                  booksOnShelf = {this.state.booksOnShelf.filter((book) => book.shelf === "wantToRead")}
                 />
-                <Read
-                  books = {this.state.books}
+                <BookShelf
+                  title = "Read"
+                  booksOnShelf = {this.state.booksOnShelf.filter((book => book.shelf === "read"))}
                 />
             </div>
             <div className="open-search">
@@ -49,7 +58,8 @@ class BooksApp extends Component {
         )}
        />
         <Route exact path="/search" render={() => (
-          <SearchPage books={this.state.books}/>
+          <SearchPage
+          />
         )}
         />
       </div>

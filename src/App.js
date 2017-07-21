@@ -31,6 +31,9 @@ class BooksApp extends Component {
 
 
   render() {
+
+    const { booksOnShelf } = this.state
+  
     return (
       <div className="app">
             {console.log(this.state.booksOnShelf)}
@@ -40,15 +43,15 @@ class BooksApp extends Component {
             <div className="list-books-content">
                 <BookShelf
                   title = "Currently Reading"
-                  booksOnShelf = {this.state.booksOnShelf.filter((book) => book.shelf === "currentlyReading")}
+                  booksOnShelf = {booksOnShelf.filter((book) => book.shelf === "currentlyReading")}
                 />
                 <BookShelf
                   title = "Want to Read"
-                  booksOnShelf = {this.state.booksOnShelf.filter((book) => book.shelf === "wantToRead")}
+                  booksOnShelf = {booksOnShelf.filter((book) => book.shelf === "wantToRead")}
                 />
                 <BookShelf
                   title = "Read"
-                  booksOnShelf = {this.state.booksOnShelf.filter((book => book.shelf === "read"))}
+                  booksOnShelf = {booksOnShelf.filter((book => book.shelf === "read"))}
                 />
             </div>
             <div className="open-search">

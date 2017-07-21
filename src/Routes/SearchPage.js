@@ -20,7 +20,7 @@ class SearchPage extends Component {
        BooksAPI
        .search(query.trim(), 10)
        .then((searchResults) => {
-         this.setState({searchResults})
+         this.setState({searchResults: searchResults.filter((item) => item.shelf === "none")})
        })
      } else {
        this.setState({searchResults: []})

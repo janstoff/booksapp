@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import * as BooksAPI from '../../BooksAPI'
 
 
 class BookShelf extends Component {
@@ -12,12 +11,12 @@ class BookShelf extends Component {
 
   render () {
 
-    const { booksOnShelf } = this.props
+    const { booksOnShelf, title } = this.props
 
 
     return (
       <div className="bookshelf">
-        <h2 className="bookshelf-title">Want to Read</h2>
+        <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
             {booksOnShelf.map((book) => (

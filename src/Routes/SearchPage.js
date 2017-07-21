@@ -16,17 +16,20 @@ class SearchPage extends Component {
   }
 
     updateSearchResults = (query) => {
-      BooksAPI
-      .search(query, 10)
-      .then((searchResults) => {
-        this.setState({searchResults})
-      })
+     if (query) {
+       BooksAPI
+       .search(query.trim(), 10)
+       .then((searchResults) => {
+         this.setState({searchResults})
+       })
+     } else {
+       this.setState({searchResults: []})
+     }
     }
 
 
   render() {
 
-    const { books } = this.props
     const { searchResults } = this.state
 
 
@@ -38,21 +41,21 @@ class SearchPage extends Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              onChange={(event) => this.updateSearchResults(event.target.value.trim())}
+              onChange={(event) => this.updateSearchResults(event.target.value)}
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
             {searchResults.map((book) => (
-              <li key={book.id}>
-                <div className="book">
+              <li>
+                <div key={book.id} className="book">
                   <div className="book-top">
-                    {book.imageLinks && (
+                    {book.imageLinks.smallThumbnail && (
                       <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
                     )}
                     <div className="book-shelf-changer">
-                      <select>
+                      <select value={book.shelf}>
                         <option value="none" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
                         <option value="wantToRead">Want to Read</option>

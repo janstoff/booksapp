@@ -16,27 +16,64 @@ class BooksApp extends Component {
 
   state = {
     booksOnShelf: [],
-    changeSelection: []
+    searchResults: [],
   }
 
   componentDidMount() {
-    BooksAPI.getAll().then((booksOnShelf) => {
-      this.setState({booksOnShelf : booksOnShelf})
+    BooksAPI.getAll().then((allReturnedBooks) => {
+      this.setState({booksOnShelf : allReturnedBooks})
     })
   }
 
-  changeShelf = (book, shelf) => {
-    BooksAPI.update();
+  handleSearch = (query) => {
+   if (query !== ' ') {
+     BooksAPI
+     .search(query.trim(), 10)
+     .then((allSearchResults) => {
+       if (allSearchResults && allSearchResults.length) {
+         this.setState({searchResults: allSearchResults.filter((item) => item.shelf === "none")})
+       } else {
+         this.setState({searchResults: []})
+       }
+     })
+   }
   }
+
+    handleChange = (bookToMove, shelfSelected) => {
+      BooksAPI.update(bookToMove, shelfSelected)
+        .then(() => {
+          this.setState((state) => {
+            let newShelfState = state.booksOnShelf.map(book => {
+              book.id === bookToMove.id && (book.shelf = shelfSelected);
+              return book;
+            });
+            return {booksOnShelf: newShelfState};
+          })
+        })
+    }
+
+    handleAddFromSearch = (bookToAdd, shelfSelected) => {
+      BooksAPI.update(bookToAdd, shelfSelected)
+        .then(() => {
+          BooksAPI.get(bookToAdd.id)
+          .then((bookRetrieved) => {
+            this.setState((state) => {
+              let newShelfState = state.booksOnShelf.concat(bookRetrieved);
+              return {booksOnShelf: newShelfState}
+            })
+            this.setState({searchResults: this.state.searchResults.filter((item) => item.id !== bookRetrieved.id)})
+          })
+        })
+    }
+
 
 
   render() {
 
-    const { booksOnShelf } = this.state
-  
+    const { booksOnShelf, searchResults } = this.state
+
     return (
       <div className="app">
-            {console.log(this.state.booksOnShelf)}
         <Route exact path="/" render={() => (
           <div>
             <Header/>
@@ -44,14 +81,17 @@ class BooksApp extends Component {
                 <BookShelf
                   title = "Currently Reading"
                   booksOnShelf = {booksOnShelf.filter((book) => book.shelf === "currentlyReading")}
+                  onChangeShelf={this.handleChange}
                 />
                 <BookShelf
                   title = "Want to Read"
                   booksOnShelf = {booksOnShelf.filter((book) => book.shelf === "wantToRead")}
+                  onChangeShelf={this.handleChange}
                 />
                 <BookShelf
                   title = "Read"
                   booksOnShelf = {booksOnShelf.filter((book => book.shelf === "read"))}
+                  onChangeShelf={this.handleChange}
                 />
             </div>
             <div className="open-search">
@@ -60,8 +100,12 @@ class BooksApp extends Component {
           </div>
         )}
        />
+
         <Route exact path="/search" render={() => (
           <SearchPage
+            searchResults={searchResults}
+            onChangeShelf={this.handleAddFromSearch}
+            onSearch={this.handleSearch}
           />
         )}
         />
@@ -70,4 +114,4 @@ class BooksApp extends Component {
   }
 }
 
-export default BooksApp
+export default BooksApp;

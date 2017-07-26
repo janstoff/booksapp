@@ -8,7 +8,9 @@ This project requires Node and NPM. If you do not have it, please download it (h
 To install My Reads clone the repository:
 
 $ git clone https://github.com/janstoff/booksapp.git
+
 $ cd bookapp
+
 $ npm install
 
 

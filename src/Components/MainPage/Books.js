@@ -18,10 +18,10 @@ class Books extends Component {
     return (
       <ol className="books-grid">
         {booksToShow && booksToShow.map((book) => (
-          <li>
-            <div key={book.id} className="book">
+          <li key={book.id}>
+            <div className="book">
               <div className="book-top">
-                {book.imageLinks.smallThumbnail && (
+                {book.imageLinks && (
                   <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.smallThumbnail}`}}></div>
                 )}
                 <div className="book-shelf-changer">

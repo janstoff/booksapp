@@ -25,6 +25,7 @@ class BooksApp extends Component {
     })
   }
 
+//would love some feedback on whether it would be recommended to have the search state and handler in the SearchPage component instead and how to sync the state between the 2 components
   handleSearch = (query) => {
    if (query !== ' ') {
      BooksAPI
@@ -39,6 +40,7 @@ class BooksApp extends Component {
    }
   }
 
+  //for handling the onChange event in Books on BookShelf
     handleChange = (bookToMove, shelfSelected) => {
       BooksAPI.update(bookToMove, shelfSelected)
         .then(() => {
@@ -52,6 +54,7 @@ class BooksApp extends Component {
         })
     }
 
+    //for handling the onChange event in Books on SearchPage, bit of repetition  from handleChange, but I'd rather have it DOT
     handleAddFromSearch = (bookToAdd, shelfSelected) => {
       BooksAPI.update(bookToAdd, shelfSelected)
         .then(() => {

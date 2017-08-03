@@ -64,7 +64,12 @@ class BooksApp extends Component {
               let newShelfState = state.booksOnShelf.concat(bookRetrieved);
               return {booksOnShelf: newShelfState}
             })
-            this.setState({searchResults: this.state.searchResults.filter((item) => item.id !== bookRetrieved.id)})
+            this.setState((state) => {
+              let newSearchResults = state.searchResults.map(book => {
+                book.id === bookToAdd.id && (book.shelf = shelfSelected);
+                return book;
+              })
+            })
           })
         })
     }

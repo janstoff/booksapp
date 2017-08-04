@@ -22,21 +22,29 @@ class BooksApp extends Component {
   componentDidMount() {
     BooksAPI.getAll().then((allReturnedBooks) => {
       this.setState({booksOnShelf : allReturnedBooks})
-    })
+    });
   }
 
-//would love some feedback on whether it would be recommended to have the search state and handler in the SearchPage component instead and how to sync the state between the 2 components
+//for handling search input and syncing searchResults state of a book with the booksOnShelf state of the respective book
   handleSearch = (query) => {
    if (query !== ' ') {
      BooksAPI
      .search(query.trim(), 10)
      .then((allSearchResults) => {
        if (allSearchResults && allSearchResults.length) {
-         this.setState({searchResults: allSearchResults.filter((item) => item.shelf === "none")})
+         const verifiedResults = allSearchResults.map((book) => {
+           this.state.booksOnShelf.forEach((bookOnShelf) => {
+             if (book.id == bookOnShelf.id) {
+               book.shelf = bookOnShelf.shelf;
+             }
+           });
+           return book;
+         });
+         this.setState({searchResults: verifiedResults})
        } else {
          this.setState({searchResults: []})
        }
-     })
+     });
    }
   }
 
@@ -50,8 +58,8 @@ class BooksApp extends Component {
               return book;
             });
             return {booksOnShelf: newShelfState};
-          })
-        })
+          });
+        });
     }
 
     //for handling the onChange event in Books on SearchPage, bit of repetition  from handleChange, but I'd rather have it DOT
@@ -68,10 +76,10 @@ class BooksApp extends Component {
               let newSearchResults = state.searchResults.map(book => {
                 book.id === bookToAdd.id && (book.shelf = shelfSelected);
                 return book;
-              })
-            })
-          })
-        })
+              });
+            });
+          });
+        });
     }
 
 

@@ -64,22 +64,23 @@ class BooksApp extends Component {
 
     //for handling the onChange event in Books on SearchPage, bit of repetition  from handleChange, but I'd rather have it DOT
     handleAddFromSearch = (bookToAdd, shelfSelected) => {
-      BooksAPI.update(bookToAdd, shelfSelected)
-        .then(() => {
-          BooksAPI.get(bookToAdd.id)
-          .then((bookRetrieved) => {
-            this.setState((state) => {
-              let newShelfState = state.booksOnShelf.concat(bookRetrieved);
-              return {booksOnShelf: newShelfState}
-            })
-            this.setState((state) => {
-              let newSearchResults = state.searchResults.map(book => {
-                book.id === bookToAdd.id && (book.shelf = shelfSelected);
-                return book;
+      if (bookToAdd.shelf !== shelfSelected) {
+        BooksAPI.update(bookToAdd, shelfSelected)
+          .then(() => {
+            BooksAPI.get(bookToAdd.id)
+            .then((bookRetrieved) => {
+              this.setState((state) => ({
+                booksOnShelf: state.booksOnShelf.filter((books) => books.id !== bookRetrieved.id).concat([bookRetrieved])
+              }));
+              this.setState((state) => {
+                let newSearchResults = state.searchResults.map(book => {
+                  book.id === bookToAdd.id && (book.shelf = shelfSelected);
+                  return book;
+                });
               });
             });
           });
-        });
+      }
     }
 
 
